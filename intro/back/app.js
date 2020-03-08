@@ -20,7 +20,7 @@ app.get('/get',function(req,res){
 app.put('/update',function(req,res){
     const id=req.body.id;
     const message=req.body.message;
-    data.findOneAndUpdate(id,{$set:{message:message}},{new: true},function(err){
+    data.findOneAndUpdate({id:id},{$set:{message:message}},{new: true},function(err){
        if (err)
           return res.json({ success: false, error: err });
        return res.json({ success: true });
@@ -28,7 +28,7 @@ app.put('/update',function(req,res){
 });
 app.delete('/delete',function(req,res){
     const id=req.body.id;
-    data.findOneAndDelete({id:id},function(err){
+    data.deleteOne({id:id},function(err){
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
     });
