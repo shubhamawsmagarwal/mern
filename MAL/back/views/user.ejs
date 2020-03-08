@@ -1,0 +1,19 @@
+<% include ./partials/header.ejs %>
+<a href="/logout" class="btn btn-lg btn-success basicButtons">Logout</a><a class="btn btn-lg text-info basicButtons " href="/login"><%=currentUser.username%></a><a href="/" class="btn btn-lg btn-warning basicButtons">Home</a>
+<form class="text-center border border-light p-3" style="width:30%;" action="/contribute" method="post">
+    <input type="text"  class="form-control mb-3" placeholder="Title" name="title" required>
+    <textarea class="form-control mb-4" placeholder="Description" name="description" required></textarea>
+    <input type="text" class="form-control-sm" placeholder="Category" name="category" required>
+    <input class="btn btn-info my-4 btn-block" type="submit" value="Contribute">
+</form>
+<div class="container content">
+<% articles.forEach(article=>{ %>
+<div class="container p-3 my-3 border bg-light">
+   <div class="text-center  text-primary font-weight-bold"><%=article["title"]%></div>
+   <div class="text-center p-3"><%=article["description"]%></div>
+   <div class="text-center"><a href="#" class="btn btn-secondary"><%=article["category"]%></a></div>
+</div>
+<% })%>
+</div>
+<% include ./partials/javascriptFile.ejs %>
+<% include ./partials/footer.ejs %>

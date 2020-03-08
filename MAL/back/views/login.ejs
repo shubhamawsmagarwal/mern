@@ -1,0 +1,20 @@
+<% include ./partials/header.ejs %>
+<a href="/" class="btn btn-lg btn-warning basicButtons">Home</a>
+<form class="text-center border border-light p-5" style="width:40%;" action="/login" method="POST">
+
+    <p class="h4 mb-4">Log In</p>
+
+
+    <!-- E-mail -->
+    <input type="email" class="form-control mb-4" placeholder="E-mail" name="username" required>
+
+    <!-- Password -->
+    <input type="password" class="form-control" placeholder="Password" name="password" required>
+
+
+    <!-- Sign up button -->
+    <button class="btn btn-info my-4 btn-block" type="submit">Sign in</button>
+
+</form>
+<% include ./partials/javascriptFile.ejs %>
+<% include ./partials/footer.ejs %>

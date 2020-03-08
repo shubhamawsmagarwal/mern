@@ -1,0 +1,10 @@
+body{
+    font-family:tahoma;
+}
+.basicButtons{
+    float:right;
+    margin:20px;
+}
+.content{
+    clear:both;
+}
