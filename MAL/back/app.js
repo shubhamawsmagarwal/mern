@@ -108,12 +108,12 @@ app.post("/contribute",function(req,res){
     newArticle.save(function(err,art){
         if(err){
             console.log(err);
-            res.json({success:false});
+            res.redirect("/");
         }
         else{
             req.user.articles.unshift(art);
             req.user.save();
-            res.json({success:true});
+            res.redirect("/");
         }
     });
 });

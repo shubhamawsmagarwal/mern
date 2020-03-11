@@ -30,8 +30,7 @@ class App extends Component{
       },
     };
   await axios.get('http://:3001/',config)
-    .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn });
-                  this.setState({ user: res.data.user })})
+    .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
     .catch(err=>{console.log(err)});
     await this.Refresh();
     this.setState({loading:false});
@@ -44,8 +43,7 @@ class App extends Component{
       },
     };
      await axios.post('http://:3001/login',{username: username,password: password},config)
-     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn });
-                  this.setState({ user: res.data.user })})
+     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
   }
   async Register(name,username,password){
@@ -56,8 +54,7 @@ class App extends Component{
       },
     };
     await axios.post('http://:3001/register',{name:name,username: username,password: password},config)
-     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn });
-                  this.setState({ user: res.data.user })})
+     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
   }
   async LogOut(){
@@ -68,8 +65,7 @@ class App extends Component{
       },
     };
     await axios.get('http://:3001/logout',config)
-    .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn });
-                  this.setState({ user: res.data.user })})
+    .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
     .catch(err=>{console.log(err)});
   }
   async checkUsername(username){
@@ -97,14 +93,8 @@ class App extends Component{
       },
     };
      await axios.post('http://:3001/contribute',{title: title,description: description,category:category},config)
-     .then(res => {console.log(res)})
+     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
-    var obj={
-      title:title,
-      description:description,
-      category:category
-    }
-    this.setState({articles:[...this.state.articles,obj]});
   }
   async Refresh(){
     const config = {
