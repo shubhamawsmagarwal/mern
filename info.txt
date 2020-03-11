@@ -107,3 +107,47 @@ cd intro
 sudo service mongod start
 npm start
 paste IP address of EC2
+
+
+
+mern/MAL
+MyMERNINTRO ssh http tcp 3000,tcp 3001 all anywhere
+cd SSH
+chmod 400 MyEC2KeyPair.pem
+ssh ec2-user@ -i MyEC2KeyPair.pem
+sudo su
+yum update -y
+wget -qO- https://rpm.nodesource.com/setup_12.x | bash -
+yum -y install nodejs
+yum install git -y
+amazon-linux-extras install python3
+exit
+mkdir workspace
+cd workspace
+git clone https://github.com/shubhamawsmagarwal/mern .
+cd MAL
+npm install
+cd back
+npm install
+cd ..
+cd front
+npm install
+cd ..
+sudo mv mongodb-org-3.6.repo /etc/yum.repos.d
+sudo yum install -y mongodb-org
+cd ..
+cd ..
+mkdir data
+echo 'mongod --dbpath=data --nojournal' > mongod
+chmod a+x mongod
+cd workspace
+cd MAL
+python3 -m venv vpy36
+source vpy36/bin/activate
+python -m pip install --upgrade pip
+python -m pip install sklearn
+python -m pip install joblib
+python -m pip install nltk
+sudo service mongod start
+npm start
+paste IP address of EC2

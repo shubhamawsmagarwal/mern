@@ -2,6 +2,7 @@
 const dirName=__dirname;
 var express=require("express");
 var mongoose=require("mongoose");
+var cors = require('cors');
 var passport=require("passport");
 var bodyParser=require("body-parser");
 var localStrategy=require("passport-local").Strategy;
@@ -9,15 +10,12 @@ var passportLocalMongoose=require("passport-local-mongoose");
 const request=require('request');
 var user=require("./models/user");
 var article=require("./models/article").article;
-//var methodOverride=require("method-override");
 var expressSanitizer=require("express-sanitizer");
 mongoose.connect("mongodb://localhost/newsDatabase");
 var app=express();
-app.set("view engine","ejs");
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true,useNewUrlParser:true}));
-app.use(express.static('node_modules'));
-app.use(express.static('public'));
 app.use(require("express-session")({
     secret:"hope is a good thing",
     resave:false,
@@ -32,34 +30,18 @@ app.use(function(req,res,next){
    res.locals.currentUser=req.user;
    next();
 });
-//app.use(methodOverride("_method"));
 app.use(expressSanitizer());
-var refrehFlag=true;
 
 /****** Importing dataStructure   ******/
 const NewsChain=require('./models/newsChain');
 const newsChainInstance=new NewsChain();
 
 /********** get routes  *********/
-app.get("/",needRefresh,function(req,res){
-    var innerHTML="";
+app.get("/",function(req,res){
     if(req.isAuthenticated())
-       innerHTML='<a class="btn btn-success basicButtons" href="/logout">Logout</a><a class="btn btn-lg text-info basicButtons " href="/login">'+req.user.username+'</a><a class="btn btn-lg btn-danger basicButtons" href="/refresh">Refresh</a>';
+       res.json({isLoggedIn:true,user:req.user});
     else
-       innerHTML='<a class="btn btn-info btn-lg basicButtons" href="/login">Login</a><a class="btn btn-info btn-lg basicButtons" href="/register">Register</a><a class="btn btn-lg btn-danger basicButtons" href="/refresh">Refresh</a>';
-    res.render('home',{innerHTML:innerHTML,newsChain:newsChainInstance.chain});
-});
-app.get("/register",isLoggedIn,function(req,res){
-    res.render('register');
-});
-app.get("/login",isLoggedIn,function(req,res){
-    res.render('login');
-});
-app.get("/user",function(req,res){
-    if(req.isAuthenticated())
-    res.render('user',{articles:req.user.articles});
-    else
-       res.redirect("/");
+       res.json({isLoggedIn:false,user:null});
 });
 app.get("/logout",function(req,res){
     if(req.isAuthenticated()){
@@ -76,19 +58,17 @@ app.get("/refresh",function(req,res){
             newsChain.forEach(article=>{
                getCategory(article); 
             });
-            res.redirect("/");
+            res.json({newsChain:newsChainInstance.chain});
         }
     });
 });
-app.get("*",function(req,res){
-    res.send("Error 404 not found");
-});
+
 
 
 /********* post routes  ******************/
 app.post("/login",passport.authenticate("local",{
-  successRedirect:"/login",
-  failureRedirect:"/login"
+  successRedirect:"/",
+  failureRedirect:"/"
 }),function(req,res){
 });
 app.post("/register",function(req,res){
@@ -99,10 +79,10 @@ app.post("/register",function(req,res){
     user.register(newUser,req.body.password,function(err,User){
         if(err){
             console.log(err);
-            return res.redirect("/register");
+            return res.redirect("/");
         }
         passport.authenticate("local")(req,res,function(){
-            res.redirect("/register");
+            res.redirect("/");
         });        
     });
 });
@@ -118,14 +98,16 @@ app.post("/contribute",function(req,res){
     authorUsername:req.user.username
     });
     newArticle.save(function(err,art){
-        if(err)
+        if(err){
             console.log(err);
+            res.json({success:false});
+        }
         else{
             req.user.articles.unshift(art);
             req.user.save();
+            res.json({success:true});
         }
     });
-    res.redirect("/user");
 });
 app.post("/check",function(req,res){
     user.find({username:req.body.username},function(err,result){
@@ -133,9 +115,9 @@ app.post("/check",function(req,res){
           if(Array.isArray(result))
           var count=result.length;
           if(count>=1)
-             res.send("true");
+             res.json({success:true});
           else
-             res.send("false");
+             res.json({success:false});
         }
     });
 });
@@ -157,23 +139,7 @@ function postCategory(description,category){
     console.log("Successfully inserted row exit code "+result);
 }
 
-/**************** Middleware *************/
-function isLoggedIn(req,res,next){
-    if(req.isAuthenticated())
-        res.redirect("/user");
-    else
-       return next();
-    
-}
-function needRefresh(req,res,next){
-    if(refrehFlag){
-        refrehFlag=!refrehFlag;
-        res.redirect("/refresh");
-    }
-    else
-       return next();
-       
-}
+
 /******** Listening *************/
 app.listen(3001,process.env.IP,function(res,req){
     console.log("Server is running");
