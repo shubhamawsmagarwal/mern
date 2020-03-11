@@ -23,29 +23,59 @@ class App extends Component{
     this.Refresh=this.Refresh.bind(this);
   }
   async componentWillMount(){
-  await axios.get('http://:3001/',{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+  await axios.get('http://:3001/',config)
     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
     .catch(err=>{console.log(err)});
     await this.Refresh();
     this.setState({loading:false});
   }
   async LogIn(username,password){
-     await axios.post('http://:3001/login',{username: username,password: password},{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+     await axios.post('http://:3001/login',{username: username,password: password},config)
      .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
   }
   async Register(name,username,password){
-    await axios.post('http://:3001/register',{name:name,username: username,password: password},{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios.post('http://:3001/register',{name:name,username: username,password: password},config)
      .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
   }
   async LogOut(){
-    await axios.get('http://:3001/logout',{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios.get('http://:3001/logout',config)
     .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
     .catch(err=>{console.log(err)});
   }
   async checkUsername(username){
-    await axios.post('http://:3001/check',{username:username},{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios.post('http://:3001/check',{username:username},config)
      .then(res => {
        const data=res.data.success;
        if(data===true)
@@ -56,13 +86,25 @@ class App extends Component{
      .catch(err=>{console.log(err)});
   }
   async Contribute(title,description,category){
-     await axios.post('http://:3001/contribute',{title: title,description: description,category:category},{withCredentials: true})
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+     await axios.post('http://:3001/contribute',{title: title,description: description,category:category},config)
      .then(res => {this.setState({ isLoggedIn: res.data.isLoggedIn,user: res.data.user })})
      .catch(err=>{console.log(err)});
   }
   async Refresh(){
+    const config = {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
     this.setState({loading:true});
-    await axios.get('http://:3001/refresh',{withCredentials: true})
+    await axios.get('http://:3001/refresh',config)
     .then(res => {this.setState({ newsChain: res.data.newsChain })})
     .catch(err=>{console.log(err)});
     this.setState({loading:false});

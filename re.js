@@ -1,6 +1,8 @@
 /********* Requiring packages and using them ********/
 const dirName=__dirname;
 var express=require("express");
+const path = require('path')
+var cookieParser = require('cookie-parser')
 var mongoose=require("mongoose");
 var cors = require('cors');
 var passport=require("passport");
@@ -17,7 +19,9 @@ var corsOptions = {
   origin: 'http://:3000',
   credentials:true
 }
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors(corsOptions));
+app.use(cookieParser('hopeisagoodthing'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true,useNewUrlParser:true}));
 app.use(require("express-session")({
