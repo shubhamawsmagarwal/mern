@@ -52,9 +52,9 @@ class App extends Component{
     axios.post('http://:3001/check', {username:username})
      .then(res => {
        const data=res.data.success;
-       if(data=="true")
+       if(data===true)
           alert("Username not available");
-       else if(data=="false")
+       else if(data===false)
           alert("Username available");
      })
      .catch(err=>{console.log(err)});
@@ -80,7 +80,9 @@ class App extends Component{
   
   render(){
     return(
-      <Router><div><Switch>
+      <Router><div>
+      {!this.state.loading
+      ?<Switch>
         <Route exact path="/" render={(props)=><Home {...props} 
         isLoggedIn={this.state.isLoggedIn} Refresh={this.Refresh} loading={this.state.loading} newsChain={this.state.newsChain} 
         username={!this.state.isLoggedIn
@@ -106,7 +108,14 @@ class App extends Component{
         }
         ></Route>
         <Route component={Error}></Route>
-      </Switch></div></Router>
+      </Switch>
+      :<Route render={(props)=><Home {...props} 
+        isLoggedIn={this.state.isLoggedIn} Refresh={this.Refresh} loading={this.state.loading} newsChain={this.state.newsChain} 
+        username={!this.state.isLoggedIn
+                  ?null
+                  :this.state.user.username}
+        />}></Route>
+      }</div></Router>
     );
   }
 }

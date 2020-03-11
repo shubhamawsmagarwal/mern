@@ -18,7 +18,7 @@ class Home extends Component{
           ?<div className="container content">Loading...</div>
           :<div className="container content">
           {this.props.newsChain.map((article)=>(
-            <div className="container p-3 my-3 border bg-light">
+            <div className="container p-3 my-3 border bg-light" key={article.description}>
                <div className="text-center  text-primary font-weight-bold">{article.title}</div>
                <div className="text-center p-3">{article.description}</div>
                <div className="text-center"><button className="btn btn-secondary">{article.category}</button></div>
