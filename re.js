@@ -46,6 +46,8 @@ const newsChainInstance=new NewsChain();
 
 /********** get routes  *********/
 app.get("/",function(req,res){
+console.log("uuuuser",req.user)
+      console.log("iiiiislog",req.isAuthenticated())
     if(req.isAuthenticated())
        res.json({isLoggedIn:true,user:req.user});
     else
@@ -79,6 +81,19 @@ app.post("/login",passport.authenticate("local",{
   failureRedirect:"/"
 }),function(req,res){
 });
+/*app.post('/login', function(req, res) {
+  passport.authenticate('local', function(err, user, info) {
+    if (err) { return  res.redirect("/"); }
+    if (!user) {   return  res.redirect("/"); }
+    req.logIn(user, function(err) {
+      if (err) { return  res.redirect("/"); }
+      console.log("user",req.user)
+      console.log("islog",req.isAuthenticated())
+      console.log(user)
+      return  res.redirect("/");
+    });
+  })(req, res);
+});*/
 app.post("/register",function(req,res){
     var newUser=new user({
     username:req.sanitize(req.body.username),
